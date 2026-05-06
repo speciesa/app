@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "Speciesa",
+    "slug": "speciesa",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": false,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#E1F5EE"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.speciesa.mobile",
+      "buildNumber": "1"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#E1F5EE"
+      },
+      "package": "app.speciesa.mobile",
+      "versionCode": 1
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-sqlite",
+      [
+        "expo-build-properties",
+        {
+          "android": { "newArchEnabled": true },
+          "ios": { "newArchEnabled": true }
+        }
+      ]
+    ],
+    "scheme": "speciesa",
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
