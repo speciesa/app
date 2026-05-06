@@ -1,0 +1,2 @@
+npx ngrok http 8000
+
