@@ -11,7 +11,7 @@
       "android": {
         "buildType": "apk"
       },
-      "env": { "EXPO_PUBLIC_API_URL": "https://api.speciesa.app/v1" }
+      "env": { "EXPO_PUBLIC_API_URL": "https://deluxe-ageless-outbound.ngrok-free.dev" }
     },
     "production": {
       "env": { "EXPO_PUBLIC_API_URL": "https://api.speciesa.app/v1" }
