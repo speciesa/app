@@ -4,6 +4,8 @@ module.exports = function (api) {
   return {
     presets: ['babel-preset-expo'],
     plugins: [
+      'babel-plugin-transform-import-meta',
+      '@babel/plugin-syntax-import-meta',
       [
         'module-resolver',
         {
