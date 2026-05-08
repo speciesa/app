@@ -14,7 +14,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
-  isAuthenticated: !!storage.getString('access_token'),
+  isAuthenticated: false,
   hasPremium: false,
 
   setTokens: (access, refresh) => {
@@ -32,4 +32,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   setHasPremium: (val) => set({ hasPremium: val }),
+
+  rehydrate: () => {
+    const token = storage.getString('access_token');
+    if (token) set({ isAuthenticated: true });
+  }
 }));

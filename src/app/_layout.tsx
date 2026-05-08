@@ -9,6 +9,9 @@ const queryClient = new QueryClient({
 });
 
 export default function RootLayout() {
+  useEffect(() => {
+    useAuthStore.persist.rehydrate();
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <StatusBar style="auto" />
