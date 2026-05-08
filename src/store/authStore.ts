@@ -10,6 +10,7 @@ interface AuthState {
   logout: () => void;
   hasPremium: boolean;
   setHasPremium: (val: boolean) => void;
+  rehydrate: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
