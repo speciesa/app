@@ -28,13 +28,6 @@
       "expo-router",
       "expo-secure-store",
       "expo-sqlite",
-      [
-        "expo-build-properties",
-        {
-          "android": { "newArchEnabled": true },
-          "ios": { "newArchEnabled": true }
-        }
-      ]
     ],
     "scheme": "speciesa",
     "experiments": {
