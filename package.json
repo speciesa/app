@@ -2,6 +2,15 @@
   "name": "speciesa-mobile",
   "version": "1.0.0",
   "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "test": "jest --watchAll=false",
+    "test:watch": "jest --watchAll",
+    "lint": "eslint src --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "@expo/metro-runtime": "~55.0.11",
     "@tanstack/react-query": "^5.37.1",
@@ -39,5 +48,12 @@
     "babel-plugin-transform-import-meta": "^2.3.3",
     "expo-system-ui": "^55.0.17",
     "typescript": "~5.9.2"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "setupFilesAfterFramework": ["@testing-library/react-native/extend-expect"],
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
+    ]
   }
 }
