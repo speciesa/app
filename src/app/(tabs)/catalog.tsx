@@ -43,7 +43,17 @@ export default function CatalogScreen() {
 
   const rankQuery = useTaxaByRank('kingdom', 'ru');
   const childrenQuery = useTaxonChildren(params.taxon_id ?? '', 'ru', !isRoot);
-
+console.log('rankQuery', {
+  data: rankQuery.data,
+  error: rankQuery.error,
+  status: rankQuery.status,
+  isFetching: rankQuery.isFetching,
+});
+console.log('childrenQuery', {
+  data: childrenQuery.data,
+  error: childrenQuery.error,
+  status: childrenQuery.status,
+});
   const query = isRoot ? rankQuery : childrenQuery;
   const items: TaxonListItem[] = query.data?.data ?? [];
   const breadcrumb: TaxonListItem[] = params.breadcrumb ? JSON.parse(params.breadcrumb) : [];
