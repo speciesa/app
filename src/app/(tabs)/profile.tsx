@@ -73,3 +73,17 @@ export default function ProfileScreen() {
     </SafeAreaView>
   );
 }
+
+const s = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#FAFAF8', padding: 16 },
+  title: { fontSize: 24, fontWeight: '500', color: '#2C2C2A', marginBottom: 20 },
+  card: { backgroundColor: '#F1EFE8', borderRadius: 14, padding: 14, marginBottom: 12 },
+  email: { fontSize: 15, color: '#2C2C2A', fontWeight: '500' },
+  sub: { fontSize: 13, color: '#1D9E75', marginTop: 4 },
+  btn: { backgroundColor: '#1D9E75', borderRadius: 12, padding: 14, alignItems: 'center', marginBottom: 12 },
+  btnText: { color: '#fff', fontSize: 15, fontWeight: '500' },
+  premBtn: { backgroundColor: '#E1F5EE', borderRadius: 12, padding: 14, alignItems: 'center', marginBottom: 12, borderWidth: 0.5, borderColor: '#9FE1CB' },
+  premBtnText: { color: '#085041', fontSize: 15, fontWeight: '500' },
+  logoutBtn: { padding: 14, alignItems: 'center' },
+  logoutText: { color: '#888780', fontSize: 14 },
+});
