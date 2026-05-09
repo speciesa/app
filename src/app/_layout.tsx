@@ -1,6 +1,9 @@
+import React, { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+
+import { useAuthStore } from '@/store/authStore';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -10,8 +13,9 @@ const queryClient = new QueryClient({
 
 export default function RootLayout() {
   useEffect(() => {
-    useAuthStore.persist.rehydrate();
+    useAuthStore.getState().rehydrate();
   }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <StatusBar style="auto" />

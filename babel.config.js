@@ -4,8 +4,7 @@ module.exports = function (api) {
   return {
     presets: ['babel-preset-expo'],
     plugins: [
-      'babel-plugin-transform-import-meta',
-      '@babel/plugin-syntax-import-meta',
+      'expo-router/babel',
       [
         'module-resolver',
         {
@@ -15,7 +14,6 @@ module.exports = function (api) {
           },
         },
       ],
-      'react-native-worklets/plugin',
     ],
   };
 };

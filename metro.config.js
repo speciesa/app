@@ -1,11 +1,3 @@
 const { getDefaultConfig } = require('expo/metro-config');
 
-const config = getDefaultConfig(__dirname);
-
-config.resolver.sourceExts = [...config.resolver.sourceExts, 'mjs', 'cjs'];
-
-config.resolver.sourceExts = config.resolver.sourceExts.filter(ext => ext !== 'wasm');
-
-config.resolver.assetExts.push('wasm');
-
-module.exports = config;
+module.exports = getDefaultConfig(__dirname);
