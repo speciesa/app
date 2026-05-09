@@ -4,10 +4,18 @@ import {
   StyleSheet, Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { usePacks } from '@/hooks/useApi';
-import { downloadPack, deletePack, isPackDownloaded, type DownloadProgress } from '@/lib/offline/packManager';
+import {
+  downloadPack,
+  deletePack,
+  isPackDownloaded,
+  type DownloadProgress,
+} from '@/lib/offline/packManager';
+
 import type { OfflinePack } from '@/types';
 import { Button, TaxonListSkeleton } from '@/components/ui';
+import { t } from '@/i18n';
 
 export default function OfflinePacksScreen() {
   const { data: packs, isLoading } = usePacks();
@@ -19,21 +27,29 @@ export default function OfflinePacksScreen() {
         setProgress(prev => ({ ...prev, [pack.id]: p }));
       });
     } catch (err: any) {
-      Alert.alert('Ошибка загрузки', err.message ?? 'Попробуйте снова');
+      Alert.alert(
+        t('errors.generic'),
+        err?.message ?? t('errors.retry')
+      );
     }
   };
 
   const handleDelete = (pack: OfflinePack) => {
     Alert.alert(
-      'Удалить пакет?',
-      `Пакет «${pack.name_ru}» будет удалён с устройства.`,
+      t('packs.delete_title'),
+      t('packs.delete_desc', { name: pack.name_ru }),
       [
-        { text: 'Отмена', style: 'cancel' },
+        { text: t('packs.cancel'), style: 'cancel' },
         {
-          text: 'Удалить', style: 'destructive',
+          text: t('packs.delete'),
+          style: 'destructive',
           onPress: async () => {
             await deletePack(pack.id);
-            setProgress(prev => { const n = { ...prev }; delete n[pack.id]; return n; });
+            setProgress(prev => {
+              const next = { ...prev };
+              delete next[pack.id];
+              return next;
+            });
           },
         },
       ],
@@ -44,8 +60,8 @@ export default function OfflinePacksScreen() {
 
   return (
     <SafeAreaView style={s.container} edges={['top']}>
-      <Text style={s.title}>Офлайн-пакеты</Text>
-      <Text style={s.subtitle}>Скачайте разделы для работы без интернета</Text>
+      <Text style={s.title}>{t('packs.title')}</Text>
+      <Text style={s.subtitle}>{t('packs.subtitle')}</Text>
 
       <FlatList
         data={packs ?? []}
@@ -65,7 +81,10 @@ export default function OfflinePacksScreen() {
 }
 
 function PackCard({
-  pack, progress, onDownload, onDelete,
+  pack,
+  progress,
+  onDownload,
+  onDelete,
 }: {
   pack: OfflinePack;
   progress?: DownloadProgress;
@@ -73,10 +92,32 @@ function PackCard({
   onDelete: () => void;
 }) {
   const downloaded = isPackDownloaded(pack.id);
-  const isDownloading = progress && progress.phase !== 'done' && progress.phase !== 'error';
-  const progressPct = isDownloading && progress.total > 0
-    ? Math.round((progress.current / progress.total) * 100)
-    : 0;
+
+  const isDownloading =
+    !!progress &&
+    progress.phase !== 'done' &&
+    progress.phase !== 'error';
+
+  const progressPct =
+    isDownloading && progress?.total
+      ? Math.round((progress.current / progress.total) * 100)
+      : 0;
+
+  const progressText = (() => {
+    if (!isDownloading || !progress) return null;
+
+    const base = t('packs.downloading');
+
+    if (progress.phase === 'taxa') {
+      return `${base}: ${progress.current}/${progress.total}`;
+    }
+
+    if (progress.phase === 'images') {
+      return `${base}: ${progress.current}/${progress.total}`;
+    }
+
+    return base;
+  })();
 
   return (
     <View style={s.card}>
@@ -84,10 +125,16 @@ function PackCard({
         <View style={s.cardInfo}>
           <Text style={s.packName}>{pack.name_ru}</Text>
           <Text style={s.packMeta}>
-            {pack.species_count} видов · ~{pack.size_mb_estimate} МБ
+            {t('packs.meta', {
+              count: pack.species_count,
+              size: pack.size_mb_estimate,
+            })}
           </Text>
         </View>
-        <Text style={s.price}>{pack.price_eur.toFixed(2)} €</Text>
+
+        <Text style={s.price}>
+          {pack.price_eur.toFixed(2)} €
+        </Text>
       </View>
 
       {isDownloading && (
@@ -95,11 +142,10 @@ function PackCard({
           <View style={[s.progressFill, { width: `${progressPct}%` }]} />
         </View>
       )}
-      {isDownloading && (
+
+      {progressText && (
         <Text style={s.progressText}>
-          {progress!.phase === 'taxa' ? `Загрузка видов: ${progress!.current}/${progress!.total}` :
-           progress!.phase === 'images' ? `Загрузка фото: ${progress!.current}/${progress!.total}` :
-           'Загрузка...'}
+          {progressText}
         </Text>
       )}
 
@@ -107,17 +153,26 @@ function PackCard({
         {downloaded ? (
           <>
             <View style={s.downloadedBadge}>
-              <Text style={s.downloadedText}>✓ Загружено</Text>
+              <Text style={s.downloadedText}>
+                {t('packs.downloaded')}
+              </Text>
             </View>
+
             <TouchableOpacity onPress={onDelete} style={s.deleteBtn}>
-              <Text style={s.deleteBtnText}>Удалить</Text>
+              <Text style={s.deleteBtnText}>
+                {t('packs.delete')}
+              </Text>
             </TouchableOpacity>
           </>
         ) : (
           <Button
-            label={isDownloading ? `${progressPct}%` : 'Скачать'}
+            label={
+              isDownloading
+                ? `${progressPct}%`
+                : t('packs.download')
+            }
             onPress={onDownload}
-            loading={!!isDownloading}
+            loading={isDownloading}
             style={s.downloadBtn}
           />
         )}
@@ -128,22 +183,106 @@ function PackCard({
 
 const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FAFAF8' },
-  title: { fontSize: 24, fontWeight: '500', color: '#2C2C2A', paddingHorizontal: 16, paddingTop: 16 },
-  subtitle: { fontSize: 13, color: '#888780', paddingHorizontal: 16, marginTop: 4, marginBottom: 16 },
+
+  title: {
+    fontSize: 24,
+    fontWeight: '500',
+    color: '#2C2C2A',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+
+  subtitle: {
+    fontSize: 13,
+    color: '#888780',
+    paddingHorizontal: 16,
+    marginTop: 4,
+    marginBottom: 16,
+  },
+
   list: { padding: 16, gap: 12 },
-  card: { backgroundColor: '#F1EFE8', borderRadius: 14, padding: 14, borderWidth: 0.5, borderColor: '#E8E6DE' },
-  cardTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 },
+
+  card: {
+    backgroundColor: '#F1EFE8',
+    borderRadius: 14,
+    padding: 14,
+    borderWidth: 0.5,
+    borderColor: '#E8E6DE',
+  },
+
+  cardTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+
   cardInfo: { flex: 1 },
-  packName: { fontSize: 15, fontWeight: '500', color: '#2C2C2A' },
-  packMeta: { fontSize: 12, color: '#888780', marginTop: 3 },
-  price: { fontSize: 16, fontWeight: '500', color: '#085041' },
-  progressBar: { height: 4, backgroundColor: '#E8E6DE', borderRadius: 2, marginBottom: 6, overflow: 'hidden' },
-  progressFill: { height: 4, backgroundColor: '#1D9E75', borderRadius: 2 },
-  progressText: { fontSize: 11, color: '#888780', marginBottom: 8 },
-  cardActions: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+
+  packName: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#2C2C2A',
+  },
+
+  packMeta: {
+    fontSize: 12,
+    color: '#888780',
+    marginTop: 3,
+  },
+
+  price: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#085041',
+  },
+
+  progressBar: {
+    height: 4,
+    backgroundColor: '#E8E6DE',
+    borderRadius: 2,
+    marginBottom: 6,
+    overflow: 'hidden',
+  },
+
+  progressFill: {
+    height: 4,
+    backgroundColor: '#1D9E75',
+    borderRadius: 2,
+  },
+
+  progressText: {
+    fontSize: 11,
+    color: '#888780',
+    marginBottom: 8,
+  },
+
+  cardActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+
   downloadBtn: { flex: 1 },
-  downloadedBadge: { flex: 1, padding: 10, backgroundColor: '#EAF3DE', borderRadius: 10, alignItems: 'center' },
-  downloadedText: { fontSize: 13, color: '#3B6D11', fontWeight: '500' },
+
+  downloadedBadge: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#EAF3DE',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+
+  downloadedText: {
+    fontSize: 13,
+    color: '#3B6D11',
+    fontWeight: '500',
+  },
+
   deleteBtn: { padding: 10 },
-  deleteBtnText: { fontSize: 13, color: '#993C1D' },
+
+  deleteBtnText: {
+    fontSize: 13,
+    color: '#993C1D',
+  },
 });

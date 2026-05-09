@@ -87,7 +87,7 @@ export async function downloadPack(
       const { id } = manifest.taxa[i];
       // Fetch full taxon card
       try {
-        const taxon: TaxonCard = await api.get(`/taxa/${id}?locale=ru`).then(r => r.data);
+        const taxon: TaxonCard = await api.get(`/taxa/${id}?locale=en`).then(r => r.data);
         await storeTaxon(db, taxon, packId);
       } catch {
         // Skip failed individual taxa — don't abort whole download

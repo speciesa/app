@@ -1,7 +1,21 @@
 export type TaxonRank =
-  | 'kingdom' | 'phylum' | 'class' | 'order' | 'family' | 'genus' | 'species';
+  | 'kingdom'
+  | 'phylum'
+  | 'class'
+  | 'order'
+  | 'family'
+  | 'genus'
+  | 'species';
 
-export type IucnStatus = 'lc' | 'nt' | 'vu' | 'en' | 'cr' | 'ew' | 'ex' | 'dd';
+export type IucnStatus =
+  | 'lc'
+  | 'nt'
+  | 'vu'
+  | 'en'
+  | 'cr'
+  | 'ew'
+  | 'ex'
+  | 'dd';
 
 export interface TaxonListItem {
   id: string;
@@ -103,32 +117,35 @@ export interface MeResponse extends User {
   purchased_pack_ids: string[];
 }
 
-export const RANK_LABELS_RU: Record<TaxonRank, string> = {
-  kingdom: 'Царство',
-  phylum: 'Тип / Отдел',
-  class: 'Класс',
-  order: 'Порядок',
-  family: 'Семейство',
-  genus: 'Род',
-  species: 'Вид',
-};
-
+/**
+ * IMPORTANT:
+ * UI LABELS MOVED TO i18n
+ * (see src/i18n/locales/en.ts + ru.ts)
+ *
+ * Use:
+ *   t('rank.species')
+ *   t('iucn.cr')
+ */
 export const RANK_ORDER: TaxonRank[] = [
-  'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species',
+  'kingdom',
+  'phylum',
+  'class',
+  'order',
+  'family',
+  'genus',
+  'species',
 ];
 
-export const IUCN_LABELS_RU: Record<IucnStatus, string> = {
-  lc: 'Наим. угрожаемый',
-  nt: 'Близко к угрозе',
-  vu: 'Уязвимый',
-  en: 'Под угрозой',
-  cr: 'Критически',
-  ew: 'Исчезнувший в дикой природе',
-  ex: 'Вымерший',
-  dd: 'Недостаточно данных',
-};
-
+/**
+ * COLORS are NOT language-specific → stay here
+ */
 export const IUCN_COLORS: Record<IucnStatus, string> = {
-  lc: '#3B6D11', nt: '#854F0B', vu: '#993C1D',
-  en: '#7B0C0C', cr: '#4A0000', ew: '#5B2782', ex: '#1A1A1A', dd: '#666660',
+  lc: '#3B6D11',
+  nt: '#854F0B',
+  vu: '#993C1D',
+  en: '#7B0C0C',
+  cr: '#4A0000',
+  ew: '#5B2782',
+  ex: '#1A1A1A',
+  dd: '#666660',
 };

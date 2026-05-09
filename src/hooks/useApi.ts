@@ -7,14 +7,14 @@ import type {
 
 // ── Taxa ───────────────────────────────────────────────────────────────────
 
-export const useTaxaByRank = (rank: TaxonRank, locale = 'ru') =>
+export const useTaxaByRank = (rank: TaxonRank, locale = 'en') =>
   useQuery<TaxonListResponse>({
     queryKey: ['taxa', 'rank', rank, locale],
     queryFn: () => api.get('/v1/taxa', { params: { rank, locale } }).then(r => r.data),
     staleTime: 1000 * 60 * 10,
   });
 
-export const useTaxonChildren = (taxonId: string, locale = 'ru', enabled = true) =>
+export const useTaxonChildren = (taxonId: string, locale = 'en', enabled = true) =>
   useQuery<TaxonListResponse>({
     queryKey: ['taxa', taxonId, 'children', locale],
     queryFn: () => api.get(`/v1/taxa/${taxonId}/children`, { params: { locale } }).then(r => r.data),
@@ -22,7 +22,7 @@ export const useTaxonChildren = (taxonId: string, locale = 'ru', enabled = true)
     staleTime: 1000 * 60 * 10,
   });
 
-export const useTaxonCard = (taxonId: string, locale = 'ru') =>
+export const useTaxonCard = (taxonId: string, locale = 'en') =>
   useQuery<TaxonCard>({
     queryKey: ['taxa', taxonId, locale],
     queryFn: () => api.get(`/v1/taxa/${taxonId}`, { params: { locale } }).then(r => r.data),
@@ -31,7 +31,7 @@ export const useTaxonCard = (taxonId: string, locale = 'ru') =>
 
 // ── Search ─────────────────────────────────────────────────────────────────
 
-export const useSearch = (query: string, locale = 'ru', enabled = true) =>
+export const useSearch = (query: string, locale = 'en', enabled = true) =>
   useQuery<SearchResponse>({
     queryKey: ['search', query, locale],
     queryFn: () => api.get('/v1/search', { params: { q: query, locale } }).then(r => r.data),
